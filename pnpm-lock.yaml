@@ -35,8 +35,8 @@ devDependencies:
     specifier: github:zeroknots/sentinellist
     version: github.com/zeroknots/sentinellist/1f9ec0250f1b3f14ba5d200629e3d9f3264fde61
   solady:
-    specifier: github:vectorized/solady
-    version: github.com/vectorized/solady/880ab6de8b4ee2ae51517bfd417a79e917675bb2
+    specifier: github:Vectorized/solady
+    version: github.com/Vectorized/solady/9deb9ed36a27261a8745db5b7cd7f4cdc3b1cd4e
   solarray:
     specifier: github:sablier-labs/solarray
     version: github.com/sablier-labs/solarray/6bf10cb34cdace52a3ba5fe437e78cc82df92684
@@ -3337,7 +3337,7 @@ packages:
     resolution: {integrity: sha512-uWjbaKIK3T1OSVptzX7Nl6PvQ3qAGtKEtVRjRuazjfL3Bx5eI409VZSqgND+4UNnmzLVdPj9FqFJNPqBZFve4w==}
     hasBin: true
     dependencies:
-      glob: 7.2.0
+      glob: 7.2.3
     dev: true
 
   /ripemd160@2.0.2:
@@ -4016,6 +4016,12 @@ packages:
       ethers: 5.7.2
     dev: true
 
+  github.com/Vectorized/solady/9deb9ed36a27261a8745db5b7cd7f4cdc3b1cd4e:
+    resolution: {tarball: https://codeload.github.com/Vectorized/solady/tar.gz/9deb9ed36a27261a8745db5b7cd7f4cdc3b1cd4e}
+    name: solady
+    version: 0.0.168
+    dev: true
+
   github.com/dapphub/ds-test/e282159d5170298eb2455a6c05280ab5a73a4ef0:
     resolution: {tarball: https://codeload.github.com/dapphub/ds-test/tar.gz/e282159d5170298eb2455a6c05280ab5a73a4ef0}
     name: ds-test
@@ -4090,12 +4096,6 @@ packages:
     resolution: {tarball: https://codeload.github.com/transmissions11/solmate/tar.gz/c892309933b25c03d32b1b0d674df7ae292ba925}
     name: solmate
     version: 6.2.0
-    dev: true
-
-  github.com/vectorized/solady/880ab6de8b4ee2ae51517bfd417a79e917675bb2:
-    resolution: {tarball: https://codeload.github.com/vectorized/solady/tar.gz/880ab6de8b4ee2ae51517bfd417a79e917675bb2}
-    name: solady
-    version: 0.0.167
     dev: true
 
   github.com/zeroknots/sentinellist/1f9ec0250f1b3f14ba5d200629e3d9f3264fde61:
