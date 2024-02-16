@@ -1,14 +1,20 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.23;
+pragma solidity ^0.8.19;
 
-import {Test} from "forge-std/Test.sol";
+import { Test } from "forge-std/Test.sol";
 import "modulekit/Helpers.sol";
-import {RhinestoneModuleKit, ModuleKitHelpers, ModuleKitUserOp, RhinestoneAccount, UserOpData} from "modulekit/ModuleKit.sol";
-import {ECDSA} from "solady/src/utils/ECDSA.sol";
+import {
+    RhinestoneModuleKit,
+    ModuleKitHelpers,
+    ModuleKitUserOp,
+    RhinestoneAccount,
+    UserOpData
+} from "modulekit/ModuleKit.sol";
+import { ECDSA } from "solady/src/utils/ECDSA.sol";
 
 import "forge-std/console2.sol";
 
-import {OwnableValidator} from "src/OwnableValidator.sol";
+import { OwnableValidator } from "src/OwnableValidator.sol";
 
 contract OwnableValidatorTest is RhinestoneModuleKit, Test {
     using ModuleKitHelpers for *;
@@ -26,7 +32,7 @@ contract OwnableValidatorTest is RhinestoneModuleKit, Test {
         vm.label(address(validator), "OwnableValidator");
 
         // Create the account and install the validator
-        (address owner, ) = makeAddrAndKey("owner");
+        (address owner,) = makeAddrAndKey("owner");
         instance = makeRhinestoneAccount("OwnableValidator");
         vm.deal(address(instance.account), 10 ether);
 
@@ -36,7 +42,7 @@ contract OwnableValidatorTest is RhinestoneModuleKit, Test {
 
     function testInstall() public {
         // Check if the validator is properly installed
-        (address owner, ) = makeAddrAndKey("owner");
+        (address owner,) = makeAddrAndKey("owner");
         assertEq(validator.owners(address(instance.account)), address(owner));
     }
 
@@ -56,10 +62,7 @@ contract OwnableValidatorTest is RhinestoneModuleKit, Test {
             callData: "",
             txValidator: address(validator)
         });
-        bytes memory signature = ecdsaSign(
-            key,
-            ECDSA.toEthSignedMessageHash(userOpData.userOpHash)
-        );
+        bytes memory signature = ecdsaSign(key, ECDSA.toEthSignedMessageHash(userOpData.userOpHash));
 
         // Set the signature
         userOpData.userOp.signature = signature;

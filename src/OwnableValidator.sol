@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.23;
+pragma solidity ^0.8.19;
 
-import {ERC7579ValidatorBase} from "modulekit/Modules.sol";
-import {UserOperation} from "modulekit/external/ERC4337.sol";
-import {EncodedModuleTypes} from "erc7579/lib/ModuleTypeLib.sol";
-import {SignatureCheckerLib} from "solady/src/utils/SignatureCheckerLib.sol";
-import {ECDSA} from "solady/src/utils/ECDSA.sol";
+import { ERC7579ValidatorBase } from "modulekit/Modules.sol";
+import { UserOperation } from "modulekit/external/ERC4337.sol";
+import { EncodedModuleTypes } from "erc7579/lib/ModuleTypeLib.sol";
+import { SignatureCheckerLib } from "solady/src/utils/SignatureCheckerLib.sol";
+import { ECDSA } from "solady/src/utils/ECDSA.sol";
 
 contract OwnableValidator is ERC7579ValidatorBase {
     using SignatureCheckerLib for address;
@@ -58,10 +58,14 @@ contract OwnableValidator is ERC7579ValidatorBase {
     function validateUserOp(
         UserOperation calldata userOp,
         bytes32 userOpHash
-    ) external view override returns (ValidationData) {
+    )
+        external
+        view
+        override
+        returns (ValidationData)
+    {
         bool validSig = owners[userOp.sender].isValidSignatureNow(
-            ECDSA.toEthSignedMessageHash(userOpHash),
-            userOp.signature
+            ECDSA.toEthSignedMessageHash(userOpHash), userOp.signature
         );
         return _packValidationData(!validSig, type(uint48).max, 0);
     }
@@ -79,18 +83,19 @@ contract OwnableValidator is ERC7579ValidatorBase {
         address sender,
         bytes32 hash,
         bytes calldata signature
-    ) external view virtual override returns (bytes4 sigValidationResult) {
+    )
+        external
+        view
+        virtual
+        override
+        returns (bytes4 sigValidationResult)
+    {
         address owner = owners[msg.sender];
         address recover = ECDSA.recover(hash, signature);
-        bool valid = SignatureCheckerLib.isValidSignatureNow(
-            owner,
-            hash,
-            signature
-        );
-        return
-            SignatureCheckerLib.isValidSignatureNow(owner, hash, signature)
-                ? EIP1271_SUCCESS
-                : EIP1271_FAILED;
+        bool valid = SignatureCheckerLib.isValidSignatureNow(owner, hash, signature);
+        return SignatureCheckerLib.isValidSignatureNow(owner, hash, signature)
+            ? EIP1271_SUCCESS
+            : EIP1271_FAILED;
     }
 
     /*//////////////////////////////////////////////////////////////////////////
@@ -118,9 +123,7 @@ contract OwnableValidator is ERC7579ValidatorBase {
      * @param typeID The type ID to check
      * @return true if the module is of the given type, false otherwise
      */
-    function isModuleType(
-        uint256 typeID
-    ) external pure override returns (bool) {
+    function isModuleType(uint256 typeID) external pure override returns (bool) {
         return typeID == TYPE_VALIDATOR;
     }
 
@@ -128,5 +131,5 @@ contract OwnableValidator is ERC7579ValidatorBase {
      * Get the module types
      * @return moduleTypes The bit-encoded module types
      */
-    function getModuleTypes() external view returns (EncodedModuleTypes) {}
+    function getModuleTypes() external view returns (EncodedModuleTypes) { }
 }
