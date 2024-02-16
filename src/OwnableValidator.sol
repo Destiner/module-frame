@@ -2,7 +2,7 @@
 pragma solidity ^0.8.19;
 
 import { ERC7579ValidatorBase } from "modulekit/Modules.sol";
-import { UserOperation } from "modulekit/external/ERC4337.sol";
+import { PackedUserOperation } from "modulekit/external/ERC4337.sol";
 import { EncodedModuleTypes } from "erc7579/lib/ModuleTypeLib.sol";
 import { SignatureCheckerLib } from "solady/src/utils/SignatureCheckerLib.sol";
 import { ECDSA } from "solady/src/utils/ECDSA.sol";
@@ -46,9 +46,9 @@ contract OwnableValidator is ERC7579ValidatorBase {
     //////////////////////////////////////////////////////////////////////////*/
 
     /**
-     * Validates UserOperation
-     * @param userOp UserOperation to be validated.
-     * @param userOpHash Hash of the UserOperation to be validated.
+     * Validates PackedUserOperation
+     * @param userOp PackedUserOperation to be validated.
+     * @param userOpHash Hash of the PackedUserOperation to be validated.
      * @return sigValidationResult the result of the signature validation, which can be:
      *  - 0 if the signature is valid
      *  - 1 if the signature is invalid
@@ -56,7 +56,7 @@ contract OwnableValidator is ERC7579ValidatorBase {
      * for more details)
      */
     function validateUserOp(
-        UserOperation calldata userOp,
+        PackedUserOperation calldata userOp,
         bytes32 userOpHash
     )
         external

@@ -5,7 +5,7 @@ import { EncodedModuleTypes } from "erc7579/lib/ModuleTypeLib.sol";
 import { MessageData } from "frame-verifier/Encoder.sol";
 import { FrameVerifier } from "frame-verifier/FrameVerifier.sol";
 import { ERC7579ValidatorBase } from "modulekit/Modules.sol";
-import { UserOperation } from "modulekit/external/ERC4337.sol";
+import { PackedUserOperation } from "modulekit/external/ERC4337.sol";
 import { Strings } from "@openzeppelin/contracts/utils/Strings.sol";
 import { SignatureCheckerLib } from "solady/src/utils/SignatureCheckerLib.sol";
 import { Base64 } from "solady/src/utils/Base64.sol";
@@ -70,9 +70,9 @@ contract FrameValidator is ERC7579ValidatorBase {
     //////////////////////////////////////////////////////////////////////////*/
 
     /**
-     * Validates UserOperation
-     * @param userOp UserOperation to be validated.
-     * @param userOpHash Hash of the UserOperation to be validated.
+     * Validates PackedUserOperation
+     * @param userOp PackedUserOperation to be validated.
+     * @param userOpHash Hash of the PackedUserOperation to be validated.
      * @return sigValidationResult the result of the signature validation, which can be:
      *  - 0 if the signature is valid
      *  - 1 if the signature is invalid
@@ -80,7 +80,7 @@ contract FrameValidator is ERC7579ValidatorBase {
      * for more details)
      */
     function validateUserOp(
-        UserOperation calldata userOp,
+        PackedUserOperation calldata userOp,
         bytes32 userOpHash
     )
         external
@@ -115,7 +115,7 @@ contract FrameValidator is ERC7579ValidatorBase {
             return VALIDATION_FAILED;
         }
         accounts[userOp.sender].lastFrameTimestamp = frameStruct.messageData.timestamp;
-        return _packValidationData(false, type(uint48).max, 0);
+        return ValidationData.wrap(0);
     }
 
     /**

@@ -11,12 +11,13 @@ import {
     MessageData,
     MessageType
 } from "frame-verifier/Encoder.sol";
+import { MODULE_TYPE_VALIDATOR } from "modulekit/external/ERC7579.sol";
 import "modulekit/Helpers.sol";
 import {
     RhinestoneModuleKit,
     ModuleKitHelpers,
     ModuleKitUserOp,
-    RhinestoneAccount,
+    AccountInstance,
     UserOpData
 } from "modulekit/ModuleKit.sol";
 import { ERC7579ValidatorBase } from "modulekit/Modules.sol";
@@ -29,13 +30,13 @@ import { FrameValidator } from "src/FrameValidator.sol";
 
 contract FrameValidatorTest is RhinestoneModuleKit, Test {
     ERC7579ValidatorBase.ValidationData internal constant VALIDATION_FAILED =
-        ERC7579ValidatorBase.ValidationData.wrap(0);
+        ERC7579ValidatorBase.ValidationData.wrap(1);
 
     using ModuleKitHelpers for *;
     using ModuleKitUserOp for *;
 
     // account and modules
-    RhinestoneAccount internal aliceAccount;
+    AccountInstance internal aliceAccount;
     FrameValidator internal validator;
 
     bytes32 internal publicKey = 0x94fec6dd277668cf5db24b408b79f91aa987fb20e4778fdd2bc94375f7f361f1;
@@ -48,11 +49,15 @@ contract FrameValidatorTest is RhinestoneModuleKit, Test {
         validator = new FrameValidator(BASE_URL);
         vm.label(address(validator), "FrameValidator");
 
-        aliceAccount = makeRhinestoneAccount("alice");
+        aliceAccount = makeAccountInstance("alice");
         vm.deal(address(aliceAccount.account), 10 ether);
 
         bytes memory data = abi.encode((publicKey));
-        aliceAccount.installValidator(address(validator), data);
+        aliceAccount.installModule({
+            moduleTypeId: MODULE_TYPE_VALIDATOR,
+            module: address(validator),
+            data: data
+        });
     }
 
     function testInstall() public {

@@ -3,11 +3,12 @@ pragma solidity ^0.8.19;
 
 import { Test } from "forge-std/Test.sol";
 import "modulekit/Helpers.sol";
+import { MODULE_TYPE_VALIDATOR } from "modulekit/external/ERC7579.sol";
 import {
     RhinestoneModuleKit,
     ModuleKitHelpers,
     ModuleKitUserOp,
-    RhinestoneAccount,
+    AccountInstance,
     UserOpData
 } from "modulekit/ModuleKit.sol";
 import { ECDSA } from "solady/src/utils/ECDSA.sol";
@@ -21,7 +22,7 @@ contract OwnableValidatorTest is RhinestoneModuleKit, Test {
     using ModuleKitUserOp for *;
 
     // account and modules
-    RhinestoneAccount internal instance;
+    AccountInstance internal instance;
     OwnableValidator internal validator;
 
     function setUp() public {
@@ -33,11 +34,15 @@ contract OwnableValidatorTest is RhinestoneModuleKit, Test {
 
         // Create the account and install the validator
         (address owner,) = makeAddrAndKey("owner");
-        instance = makeRhinestoneAccount("OwnableValidator");
+        instance = makeAccountInstance("OwnableValidator");
         vm.deal(address(instance.account), 10 ether);
 
         bytes memory data = abi.encode((address(owner)));
-        instance.installValidator(address(validator), data);
+        instance.installModule({
+            moduleTypeId: MODULE_TYPE_VALIDATOR,
+            module: address(validator),
+            data: data
+        });
     }
 
     function testInstall() public {
