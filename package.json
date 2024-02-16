@@ -20,6 +20,7 @@
     "ds-test": "github:dapphub/ds-test",
     "erc7579": "github:erc7579/erc7579-implementation",
     "forge-std": "github:foundry-rs/forge-std",
+    "frame-verifier": "github:Destiner/frame-verifier",
     "prettier": "^2.8.8",
     "sentinellist": "github:zeroknots/sentinellist",
     "solady": "github:Vectorized/solady",
