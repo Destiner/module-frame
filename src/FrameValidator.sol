@@ -16,7 +16,7 @@ import "forge-std/console2.sol";
 contract FrameValidator is ERC7579ValidatorBase {
     // The trusted URL to validate the transaction
     // Everything coming from this URL is considered valid
-    string baseUrl;
+    string public baseUrl;
 
     struct FrameUserOpSignature {
         bytes32 signature_r;

@@ -48,6 +48,7 @@ contract FrameValidatorTest is RhinestoneModuleKit, Test {
 
         validator = new FrameValidator(BASE_URL);
         vm.label(address(validator), "FrameValidator");
+        assertEq(validator.baseUrl(), BASE_URL);
 
         aliceAccount = makeAccountInstance("alice");
         vm.deal(address(aliceAccount.account), 10 ether);
