@@ -93,8 +93,9 @@ contract FrameValidator is ERC7579ValidatorBase {
         override
         returns (ValidationData)
     {
+        (bytes memory frameStructData,) = abi.decode(userOp.signature, (bytes, address));
         FrameUserOpSignature memory frameStruct =
-            abi.decode(userOp.signature, (FrameUserOpSignature));
+            abi.decode(frameStructData, (FrameUserOpSignature));
         // Verify signature
         if (
             !FrameVerifier.verifyMessageData(

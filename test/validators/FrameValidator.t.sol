@@ -101,7 +101,8 @@ contract FrameValidatorTest is RhinestoneModuleKit, Test {
                 })
             })
         });
-        userOpData.userOp.signature = abi.encode(frameStruct);
+        bytes memory frameStructData = abi.encode(frameStruct);
+        userOpData.userOp.signature = abi.encode(frameStructData, address(validator));
         ERC7579ValidatorBase.ValidationData validationResult =
             validator.validateUserOp(userOpData.userOp, userOpData.userOpHash);
         assertNotEq(
@@ -150,7 +151,8 @@ contract FrameValidatorTest is RhinestoneModuleKit, Test {
                 })
             })
         });
-        userOpData.userOp.signature = abi.encode(frameStruct);
+        bytes memory frameStructData = abi.encode(frameStruct);
+        userOpData.userOp.signature = abi.encode(frameStructData, address(validator));
         ERC7579ValidatorBase.ValidationData validationResult =
             validator.validateUserOp(userOpData.userOp, userOpData.userOpHash);
         assertNotEq(
@@ -198,7 +200,8 @@ contract FrameValidatorTest is RhinestoneModuleKit, Test {
                 })
             })
         });
-        userOpData.userOp.signature = abi.encode(frameStruct);
+        bytes memory frameStructData = abi.encode(frameStruct);
+        userOpData.userOp.signature = abi.encode(frameStructData, address(validator));
         ERC7579ValidatorBase.ValidationData validationResult =
             validator.validateUserOp(userOpData.userOp, userOpData.userOpHash);
         assertEq(
@@ -242,7 +245,8 @@ contract FrameValidatorTest is RhinestoneModuleKit, Test {
                 })
             })
         });
-        userOpData.userOp.signature = abi.encode(frameStruct);
+        bytes memory frameStructData = abi.encode(frameStruct);
+        userOpData.userOp.signature = abi.encode(frameStructData, address(validator));
         ERC7579ValidatorBase.ValidationData validationResult =
             validator.validateUserOp(userOpData.userOp, userOpData.userOpHash);
         assertEq(
@@ -286,7 +290,8 @@ contract FrameValidatorTest is RhinestoneModuleKit, Test {
                 })
             })
         });
-        userOpData.userOp.signature = abi.encode(frameStruct);
+        bytes memory frameStructData = abi.encode(frameStruct);
+        userOpData.userOp.signature = abi.encode(frameStructData, address(validator));
         ERC7579ValidatorBase.ValidationData validationResult =
             validator.validateUserOp(userOpData.userOp, userOpData.userOpHash);
         assertEq(
@@ -331,7 +336,8 @@ contract FrameValidatorTest is RhinestoneModuleKit, Test {
                 })
             })
         });
-        userOpData.userOp.signature = abi.encode(frameStruct);
+        bytes memory frameStructData = abi.encode(frameStruct);
+        userOpData.userOp.signature = abi.encode(frameStructData, address(validator));
         ERC7579ValidatorBase.ValidationData validationResult =
             validator.validateUserOp(userOpData.userOp, userOpData.userOpHash);
         assertEq(
@@ -372,7 +378,8 @@ contract FrameValidatorTest is RhinestoneModuleKit, Test {
                 })
             })
         });
-        userOpData.userOp.signature = abi.encode(frameStruct);
+        bytes memory frameStructData = abi.encode(frameStruct);
+        userOpData.userOp.signature = abi.encode(frameStructData, address(validator));
         ERC7579ValidatorBase.ValidationData validationResult =
             validator.validateUserOp(userOpData.userOp, userOpData.userOpHash);
         assertNotEq(
