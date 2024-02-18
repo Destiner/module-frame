@@ -42,10 +42,16 @@ contract FrameValidator is ERC7579ValidatorBase {
     /* Initialize the module with the given data
      * @param data The data to initialize the module with
      */
-    function onInstall(bytes calldata data) external override {
+    function onInstall(bytes calldata data) public override {
         if (data.length == 0) return;
         bytes32 publicKey = abi.decode(data, (bytes32));
         accounts[msg.sender] = AccountData(publicKey, 0);
+    }
+
+    // Compatible with Biconomy Account V2
+    function onModuleInstall(bytes calldata data) external returns (address module) {
+        onInstall(data);
+        return address(this);
     }
 
     /* De-initialize the module with the given data
