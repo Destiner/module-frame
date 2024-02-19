@@ -64,7 +64,26 @@ contract FrameValidatorTest is RhinestoneModuleKit, Test {
     function testInstall() public {
         (bytes32 accountPublicKey, uint256 lastFrameTimestamp) =
             validator.accounts(address(aliceAccount.account));
+        address account = validator.keys(accountPublicKey);
+        bool isInitialized = validator.isInitialized(address(aliceAccount.account));
+
         assertEq(publicKey, accountPublicKey);
+        assertEq(0, lastFrameTimestamp);
+        assertEq(address(aliceAccount.account), account);
+        assertTrue(isInitialized);
+    }
+
+    function testDuplicateInstall() public {
+        AccountInstance memory bobAccount = makeAccountInstance("bob");
+        vm.deal(address(bobAccount.account), 10 ether);
+
+        bytes memory data = abi.encode((publicKey));
+        bobAccount.expect4337Revert();
+        bobAccount.installModule({
+            moduleTypeId: MODULE_TYPE_VALIDATOR,
+            module: address(validator),
+            data: data
+        });
     }
 
     function testEthTransfer() public {
