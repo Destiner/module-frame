@@ -6,6 +6,7 @@ import { MessageData } from "frame-verifier/Encoder.sol";
 import { FrameVerifier } from "frame-verifier/FrameVerifier.sol";
 import { ERC7579ValidatorBase } from "modulekit/Modules.sol";
 import { PackedUserOperation } from "modulekit/external/ERC4337.sol";
+import { UserOperation } from "account-abstraction-v0.6/interfaces/UserOperation.sol";
 import { Strings } from "@openzeppelin/contracts/utils/Strings.sol";
 import { SignatureCheckerLib } from "solady/src/utils/SignatureCheckerLib.sol";
 import { Base64 } from "solady/src/utils/Base64.sol";
@@ -91,6 +92,46 @@ contract FrameValidator is ERC7579ValidatorBase {
     )
         external
         override
+        returns (ValidationData)
+    {
+        (bytes memory frameStructData,) = abi.decode(userOp.signature, (bytes, address));
+        FrameUserOpSignature memory frameStruct =
+            abi.decode(frameStructData, (FrameUserOpSignature));
+        // Verify signature
+        if (
+            !FrameVerifier.verifyMessageData(
+                accounts[userOp.sender].publicKey,
+                frameStruct.signature_r,
+                frameStruct.signature_s,
+                frameStruct.messageData
+            )
+        ) {
+            return VALIDATION_FAILED;
+        }
+        // Verify URL-decoded calldata
+        string memory expectedUrl = string.concat(
+            baseUrl,
+            Strings.toString(block.chainid),
+            "/",
+            Base64.encode(abi.encodePacked(keccak256(userOp.callData)), true)
+        );
+        if (!Strings.equal(string(frameStruct.messageData.frame_action_body.url), expectedUrl)) {
+            return VALIDATION_FAILED;
+        }
+        // Verify timestamp to protect against replay attacks
+        if (frameStruct.messageData.timestamp <= accounts[userOp.sender].lastFrameTimestamp) {
+            return VALIDATION_FAILED;
+        }
+        accounts[userOp.sender].lastFrameTimestamp = frameStruct.messageData.timestamp;
+        return ValidationData.wrap(0);
+    }
+
+    // Compatible with Entrypoint 0.6
+    function validateUserOp(
+        UserOperation calldata userOp,
+        bytes32 userOpHash
+    )
+        external
         returns (ValidationData)
     {
         (bytes memory frameStructData,) = abi.decode(userOp.signature, (bytes, address));
