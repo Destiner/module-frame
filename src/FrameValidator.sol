@@ -94,36 +94,7 @@ contract FrameValidator is ERC7579ValidatorBase {
         override
         returns (ValidationData)
     {
-        (bytes memory frameStructData,) = abi.decode(userOp.signature, (bytes, address));
-        FrameUserOpSignature memory frameStruct =
-            abi.decode(frameStructData, (FrameUserOpSignature));
-        // Verify signature
-        if (
-            !FrameVerifier.verifyMessageData(
-                accounts[userOp.sender].publicKey,
-                frameStruct.signature_r,
-                frameStruct.signature_s,
-                frameStruct.messageData
-            )
-        ) {
-            return VALIDATION_FAILED;
-        }
-        // Verify URL-decoded calldata
-        string memory expectedUrl = string.concat(
-            baseUrl,
-            Strings.toString(block.chainid),
-            "/",
-            Base64.encode(abi.encodePacked(keccak256(userOp.callData)), true)
-        );
-        if (!Strings.equal(string(frameStruct.messageData.frame_action_body.url), expectedUrl)) {
-            return VALIDATION_FAILED;
-        }
-        // Verify timestamp to protect against replay attacks
-        if (frameStruct.messageData.timestamp <= accounts[userOp.sender].lastFrameTimestamp) {
-            return VALIDATION_FAILED;
-        }
-        accounts[userOp.sender].lastFrameTimestamp = frameStruct.messageData.timestamp;
-        return ValidationData.wrap(0);
+        return _validateUserOp(userOp.sender, userOp.signature, userOp.callData);
     }
 
     // Compatible with Entrypoint 0.6
@@ -134,13 +105,24 @@ contract FrameValidator is ERC7579ValidatorBase {
         external
         returns (ValidationData)
     {
-        (bytes memory frameStructData,) = abi.decode(userOp.signature, (bytes, address));
+        return _validateUserOp(userOp.sender, userOp.signature, userOp.callData);
+    }
+
+    function _validateUserOp(
+        address sender,
+        bytes calldata signature,
+        bytes calldata callData
+    )
+        internal
+        returns (ValidationData)
+    {
+        (bytes memory frameStructData,) = abi.decode(signature, (bytes, address));
         FrameUserOpSignature memory frameStruct =
             abi.decode(frameStructData, (FrameUserOpSignature));
         // Verify signature
         if (
             !FrameVerifier.verifyMessageData(
-                accounts[userOp.sender].publicKey,
+                accounts[sender].publicKey,
                 frameStruct.signature_r,
                 frameStruct.signature_s,
                 frameStruct.messageData
@@ -153,16 +135,16 @@ contract FrameValidator is ERC7579ValidatorBase {
             baseUrl,
             Strings.toString(block.chainid),
             "/",
-            Base64.encode(abi.encodePacked(keccak256(userOp.callData)), true)
+            Base64.encode(abi.encodePacked(keccak256(callData)), true)
         );
         if (!Strings.equal(string(frameStruct.messageData.frame_action_body.url), expectedUrl)) {
             return VALIDATION_FAILED;
         }
         // Verify timestamp to protect against replay attacks
-        if (frameStruct.messageData.timestamp <= accounts[userOp.sender].lastFrameTimestamp) {
+        if (frameStruct.messageData.timestamp <= accounts[sender].lastFrameTimestamp) {
             return VALIDATION_FAILED;
         }
-        accounts[userOp.sender].lastFrameTimestamp = frameStruct.messageData.timestamp;
+        accounts[sender].lastFrameTimestamp = frameStruct.messageData.timestamp;
         return ValidationData.wrap(0);
     }
 
