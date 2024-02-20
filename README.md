@@ -46,10 +46,10 @@ source .env && forge script script/[SCRIPT_NAME].s.sol:[CONTRACT_NAME] --rpc-url
 baseUrl = "https://frame-validator.vercel.app/execute/"
 ```
 
-- Address: `0x5A12815CBcB53D4d2750A1112e0B2C5fBDbe430C` ([explorer](https://mumbai.polygonscan.com/address/0x5A12815CBcB53D4d2750A1112e0B2C5fBDbe430C))
-- Deployment tx: `0xe0d8da55e811966988307480d6f06a03fff3d958bcd77f9071102224cf799c3f` ([explorer](https://mumbai.polygonscan.com/tx/0xe0d8da55e811966988307480d6f06a03fff3d958bcd77f9071102224cf799c3f))
-- Installation tx: `0xadc2cc9a3270cab9e2bb0139c24a729badc46681bbad48450ae8c25f41757537` ([explorer](https://mumbai.polygonscan.com/tx/0xadc2cc9a3270cab9e2bb0139c24a729badc46681bbad48450ae8c25f41757537))
-- Usage tx: `0xa3bd03a0b3272dd0948a3acc95f8c0be453ef6a200b7012a877b749e0c4964ef` ([explorer](https://mumbai.polygonscan.com/tx/0xa3bd03a0b3272dd0948a3acc95f8c0be453ef6a200b7012a877b749e0c4964ef))
+- Address: `0x2007dB9DB73AD549439A2ADEe17e74083A275A72` ([explorer](https://mumbai.polygonscan.com/address/0x2007dB9DB73AD549439A2ADEe17e74083A275A72))
+- Deployment tx: `0xac8b9a15e98294021c297481789dcb1c69a77364c24411cf8337f47d18709915` ([explorer](https://mumbai.polygonscan.com/tx/0xac8b9a15e98294021c297481789dcb1c69a77364c24411cf8337f47d18709915))
+- Installation tx: `0x4a9f4f42bf9f02b6b4a4ee0c1efc664d0a43386036cd966a527af556147e6e60` ([explorer](https://mumbai.polygonscan.com/tx/0x4a9f4f42bf9f02b6b4a4ee0c1efc664d0a43386036cd966a527af556147e6e60))
+- Usage tx: `0x3f033d7f14756de0ce822fa69cb3126e224fa0522470b5426ee41f766a7596a7` ([explorer](https://mumbai.polygonscan.com/tx/0x3f033d7f14756de0ce822fa69cb3126e224fa0522470b5426ee41f766a7596a7))
 
 ## Design Notes
 
