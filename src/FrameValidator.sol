@@ -60,12 +60,6 @@ contract FrameValidator is ERC7579ValidatorBase {
         keys[publicKey] = msg.sender;
     }
 
-    // Compatible with Biconomy Account V2
-    function onModuleInstall(bytes calldata data) external returns (address module) {
-        onInstall(data);
-        return address(this);
-    }
-
     /* De-initialize the module with the given data
      * @param data The data to de-initialize the module with
      */
@@ -128,9 +122,7 @@ contract FrameValidator is ERC7579ValidatorBase {
         internal
         returns (ValidationData)
     {
-        (bytes memory frameStructData,) = abi.decode(signature, (bytes, address));
-        FrameUserOpSignature memory frameStruct =
-            abi.decode(frameStructData, (FrameUserOpSignature));
+        FrameUserOpSignature memory frameStruct = abi.decode(signature, (FrameUserOpSignature));
         // Verify signature
         if (
             !FrameVerifier.verifyMessageData(

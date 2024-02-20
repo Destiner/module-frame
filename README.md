@@ -4,8 +4,6 @@ An ERC7579-compatible validator module to validate UserOps using Farcaster Frame
 
 Compatible with `Entrypoint 0.6` and `Entrypoint 0.7`.
 
-Also compatible with Biconomy V2 accounts.
-
 Built using ModuleKit 0.3.0.
 
 ## Usage
@@ -41,6 +39,8 @@ source .env && forge script script/[SCRIPT_NAME].s.sol:[CONTRACT_NAME] --rpc-url
 ## Example
 
 ### Polygon Mumbai
+
+> Note: the deployed version is based on the [`biconomy-v2-compat`](https://github.com/Destiner/module-frame/tree/biconomy-v2-compat) tag and is slightly different, to provide the compatibility with Biconomy Account V2.
 
 ```
 baseUrl = "https://frame-validator.vercel.app/execute/"
