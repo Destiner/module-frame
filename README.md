@@ -30,18 +30,9 @@ forge test
 
 ### Deploying the module
 
-> Note: for security, the module expects the frame URL to be coming from a trusted base URL. For a custom deployment, you can provide
+> Note: for security, the module expects the frame URL to be coming from a trusted base URL. For a custom deployment, you can provide your own URL using the `BASE_URL` variable.
 
-1. Create a new `.s.sol` file in `script/` and inherit from `Script` and `RegistryDeployer` (see templates).
-2. Create a `.env` file in the root directory and add the following variables (the sender address is the address of the private key):
-
-```shell
-PK=[YOUR_PRIVATE_KEY]
-SENDER_ADDRESS=[SENDER_ADDRESS]
-RPC_URL=[RPC_URL]
-```
-
-3. Replace the variables enclosed in `[]` below and then run the command (ensure that you have the native token to pay for deployment gas):
+Create the `.env` file and provide the environment variables.
 
 ```shell
 source .env && forge script script/[SCRIPT_NAME].s.sol:[CONTRACT_NAME] --rpc-url $RPC_URL --sender $SENDER_ADDRESS --broadcast
