@@ -6,6 +6,9 @@ Compatible with `Entrypoint 0.6` and `Entrypoint 0.7`.
 
 Built using ModuleKit 0.3.0.
 
+> [!WARNING]
+> Not audited, not tested enough, not production-ready
+
 ## Usage
 
 ### Install dependencies
@@ -28,7 +31,8 @@ forge test
 
 ### Deploying the module
 
-> Note: for security, the module expects the frame URL to be coming from a trusted base URL. For a custom deployment, you can provide your own URL using the `BASE_URL` variable.
+> [!NOTE]
+> For security, the module expects the frame URL to be coming from a trusted base URL. For a custom deployment, you can provide your own URL using the `BASE_URL` variable.
 
 Create the `.env` file and provide the environment variables.
 
@@ -40,7 +44,8 @@ source .env && forge script script/[SCRIPT_NAME].s.sol:[CONTRACT_NAME] --rpc-url
 
 ### Polygon Mumbai
 
-> Note: the deployed version is based on the [`biconomy-v2-compat`](https://github.com/Destiner/module-frame/tree/biconomy-v2-compat) tag and is slightly different, to provide the compatibility with Biconomy Account V2.
+> [!NOTE]
+> The deployed version is based on the [`biconomy-v2-compat`](https://github.com/Destiner/module-frame/tree/biconomy-v2-compat) tag and is slightly different, to provide the compatibility with Biconomy Account V2.
 
 ```
 baseUrl = "https://frame-validator.vercel.app/execute/"
