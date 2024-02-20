@@ -1,6 +1,12 @@
-## Module Template
+## Frame Validator Module
 
-**A template for building smart account modules using the [ModuleKit](https://github.com/rhinestonewtf/modulekit)**
+An ERC7579-compatible validator module to validate UserOps using Farcaster Frame signatures.
+
+Compatible with `Entrypoint 0.6` and `Entrypoint 0.7`.
+
+Also compatible with Biconomy V2 accounts.
+
+Built using ModuleKit 0.3.0.
 
 ## Usage
 
@@ -10,31 +16,21 @@
 pnpm install
 ```
 
-### Update ModuleKit
-
-```shell
-pnpm update rhinestonewtf/modulekit
-```
-
-### Building modules
-
-1. Create a new file in `src/[MODULE_TYPE]` and inherit from the appropriate interface (see templates)
-2. After you finished writing your module, run the following command:
+### Building the module
 
 ```shell
 forge build
 ```
 
-### Testing modules
-
-1. Create a new `.t.sol` file in `test/[MODULE_TYPE]` and inherit from the right account kit (see templates)
-2. After you finished writing your tests, run the following command:
+### Testing the module
 
 ```shell
 forge test
 ```
 
-### Deploying modules
+### Deploying the module
+
+> Note: for security, the module expects the frame URL to be coming from a trusted base URL. For a custom deployment, you can provide
 
 1. Create a new `.s.sol` file in `script/` and inherit from `Script` and `RegistryDeployer` (see templates).
 2. Create a `.env` file in the root directory and add the following variables (the sender address is the address of the private key):
@@ -51,6 +47,15 @@ RPC_URL=[RPC_URL]
 source .env && forge script script/[SCRIPT_NAME].s.sol:[CONTRACT_NAME] --rpc-url $RPC_URL --sender $SENDER_ADDRESS --broadcast
 ```
 
-## Tutorials
+## Example
 
-For a guided walkthrough of building a module, check out our [tutorials page](https://docs.rhinestone.wtf/tutorials). For a quickstart guide, head to [quickstart](https://docs.rhinestone.wtf/quickstart).
+### Polygon Mumbai
+
+```
+baseUrl = "https://frame-validator.vercel.app/execute/"
+```
+
+- Address: `0x5A12815CBcB53D4d2750A1112e0B2C5fBDbe430C` ([explorer](https://mumbai.polygonscan.com/address/0x5A12815CBcB53D4d2750A1112e0B2C5fBDbe430C))
+- Deployment tx: `0xe0d8da55e811966988307480d6f06a03fff3d958bcd77f9071102224cf799c3f` ([explorer](https://mumbai.polygonscan.com/tx/0xe0d8da55e811966988307480d6f06a03fff3d958bcd77f9071102224cf799c3f))
+- Installation tx: `0xadc2cc9a3270cab9e2bb0139c24a729badc46681bbad48450ae8c25f41757537` ([explorer](https://mumbai.polygonscan.com/tx/0xadc2cc9a3270cab9e2bb0139c24a729badc46681bbad48450ae8c25f41757537))
+- Usage tx: `0xa3bd03a0b3272dd0948a3acc95f8c0be453ef6a200b7012a877b749e0c4964ef` ([explorer](https://mumbai.polygonscan.com/tx/0xa3bd03a0b3272dd0948a3acc95f8c0be453ef6a200b7012a877b749e0c4964ef))
