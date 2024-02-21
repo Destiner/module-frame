@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.19;
+pragma solidity ^0.8.23;
 
 import { EncodedModuleTypes } from "erc7579/lib/ModuleTypeLib.sol";
 import { MessageData, FarcasterNetwork } from "frame-verifier/Encoder.sol";
@@ -8,9 +8,7 @@ import { ERC7579ValidatorBase } from "modulekit/modules/ERC7579ValidatorBase.sol
 import { PackedUserOperation } from "account-abstraction/interfaces/PackedUserOperation.sol";
 import { UserOperation } from "account-abstraction-v0.6/interfaces/UserOperation.sol";
 import { Strings } from "@openzeppelin/contracts/utils/Strings.sol";
-import { SignatureCheckerLib } from "solady/src/utils/SignatureCheckerLib.sol";
 import { Base64 } from "solady/src/utils/Base64.sol";
-import { ECDSA } from "solady/src/utils/ECDSA.sol";
 
 import "forge-std/console2.sol";
 
@@ -24,8 +22,8 @@ contract FrameValidator is ERC7579ValidatorBase {
     FarcasterNetwork public farcasterNetwork;
 
     struct FrameUserOpSignature {
-        bytes32 signature_r;
-        bytes32 signature_s;
+        bytes32 signatureR;
+        bytes32 signatureS;
         MessageData messageData;
     }
 
@@ -80,7 +78,6 @@ contract FrameValidator is ERC7579ValidatorBase {
     /**
      * Validates PackedUserOperation
      * @param userOp PackedUserOperation to be validated.
-     * @param userOpHash Hash of the PackedUserOperation to be validated.
      * @return sigValidationResult the result of the signature validation, which can be:
      *  - 0 if the signature is valid
      *  - 1 if the signature is invalid
@@ -89,7 +86,7 @@ contract FrameValidator is ERC7579ValidatorBase {
      */
     function validateUserOp(
         PackedUserOperation calldata userOp,
-        bytes32 userOpHash
+        bytes32
     )
         external
         override
@@ -101,7 +98,7 @@ contract FrameValidator is ERC7579ValidatorBase {
     // Compatible with Entrypoint 0.6
     function validateUserOp(
         UserOperation calldata userOp,
-        bytes32 userOpHash
+        bytes32
     )
         external
         returns (ValidationData)
@@ -122,8 +119,8 @@ contract FrameValidator is ERC7579ValidatorBase {
         if (
             !FrameVerifier.verifyMessageData(
                 accounts[sender].publicKey,
-                frameStruct.signature_r,
-                frameStruct.signature_s,
+                frameStruct.signatureR,
+                frameStruct.signatureS,
                 frameStruct.messageData
             )
         ) {
@@ -153,17 +150,14 @@ contract FrameValidator is ERC7579ValidatorBase {
 
     /**
      * Validates an ERC-1271 signature
-     * @param sender The sender of the ERC-1271 call to the account
-     * @param hash The hash of the message
-     * @param signature The signature of the message
      * @return sigValidationResult the result of the signature validation, which can be:
      *  - EIP1271_SUCCESS if the signature is valid
      *  - EIP1271_FAILED if the signature is invalid
      */
     function isValidSignatureWithSender(
-        address sender,
-        bytes32 hash,
-        bytes calldata signature
+        address,
+        bytes32,
+        bytes calldata
     )
         external
         view

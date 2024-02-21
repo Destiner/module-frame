@@ -1,9 +1,8 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.19;
+pragma solidity ^0.8.23;
 
 import { Strings } from "@openzeppelin/contracts/utils/Strings.sol";
 import { Test } from "forge-std/Test.sol";
-import { VmSafe } from "forge-std/Vm.sol";
 import {
     CastId,
     FarcasterNetwork,
@@ -21,7 +20,6 @@ import {
     UserOpData
 } from "modulekit/ModuleKit.sol";
 import { ERC7579ValidatorBase } from "modulekit/Modules.sol";
-import { ECDSA } from "solady/src/utils/ECDSA.sol";
 import { Base64 } from "solady/src/utils/Base64.sol";
 
 import "forge-std/console2.sol";
@@ -41,8 +39,8 @@ contract FrameValidatorTest is RhinestoneModuleKit, Test {
 
     bytes32 internal publicKey = 0x94fec6dd277668cf5db24b408b79f91aa987fb20e4778fdd2bc94375f7f361f1;
 
-    string BASE_URL = "https://frame-validator.vercel.app/fake-execute/";
-    FarcasterNetwork farcasterNetwork = FarcasterNetwork.FARCASTER_NETWORK_MAINNET;
+    string internal BASE_URL = "https://frame-validator.vercel.app/fake-execute/";
+    FarcasterNetwork internal farcasterNetwork = FarcasterNetwork.FARCASTER_NETWORK_MAINNET;
 
     function setUp() public {
         init();
@@ -83,7 +81,12 @@ contract FrameValidatorTest is RhinestoneModuleKit, Test {
 
     function testEthTransfer() public {
         // FC message:
-        // 0a9101080d109b3e18cdef842f2001820181010a6268747470733a2f2f6672616d652d76616c696461746f722e76657263656c2e6170702f66616b652d657865637574652f33313333372f7567356c48456162336e5544776c3876574e4f7730302d73397665627555564b4b4b77416136694a7732633d10011a19089b3e1214000000000000000000000000000000000000000112148b556cddc4c97208aea4b49e0b54327b20fae469180122405649d36d30dec4d7338f412f40f179183b6d1890c98102c5a6bc713159c2c5471e24994667d59168a3b3b2aca7b7f5cadb41be5d75f4f356f59a30567075d40b2801322094fec6dd277668cf5db24b408b79f91aa987fb20e4778fdd2bc94375f7f361f1
+        // 0a9101080d109b3e18cdef842f2001820181010a6268747470733a2f2f6672616d652d76616c696461746f722e766
+        // 57263656c2e6170702f66616b652d657865637574652f33313333372f7567356c48456162336e5544776c3876574e
+        // 4f7730302d73397665627555564b4b4b77416136694a7732633d10011a19089b3e121400000000000000000000000
+        // 0000000000000000112148b556cddc4c97208aea4b49e0b54327b20fae469180122405649d36d30dec4d7338f412f
+        // 40f179183b6d1890c98102c5a6bc713159c2c5471e24994667d59168a3b3b2aca7b7f5cadb41be5d75f4f356f59a3
+        // 0567075d40b2801322094fec6dd277668cf5db24b408b79f91aa987fb20e4778fdd2bc94375f7f361f1
         address target = makeAddr("target");
         uint256 value = 1 ether;
 
@@ -100,8 +103,8 @@ contract FrameValidatorTest is RhinestoneModuleKit, Test {
             Base64.encode(abi.encodePacked(keccak256(userOpData.userOp.callData)), true)
         );
         FrameValidator.FrameUserOpSignature memory frameStruct = FrameValidator.FrameUserOpSignature({
-            signature_r: 0x5649d36d30dec4d7338f412f40f179183b6d1890c98102c5a6bc713159c2c547,
-            signature_s: 0x1e24994667d59168a3b3b2aca7b7f5cadb41be5d75f4f356f59a30567075d40b,
+            signatureR: 0x5649d36d30dec4d7338f412f40f179183b6d1890c98102c5a6bc713159c2c547,
+            signatureS: 0x1e24994667d59168a3b3b2aca7b7f5cadb41be5d75f4f356f59a30567075d40b,
             messageData: MessageData({
                 type_: MessageType.MESSAGE_TYPE_FRAME_ACTION,
                 fid: 7963,
@@ -126,12 +129,16 @@ contract FrameValidatorTest is RhinestoneModuleKit, Test {
 
     function testErc20Transfer() public {
         // FC message:
-        // 0a9101080d109b3e18f48e852f2001820181010a6268747470733a2f2f6672616d652d76616c696461746f722e76657263656c2e6170702f66616b652d657865637574652f33313333372f596c4e2d5372743066396b694e723248617a4e346e353435383361666e6d4f34635a577a737a32496b584d3d10011a19089b3e1214000000000000000000000000000000000000000112143f967a00d36d29b7bc589d454c55a3c2af8dddc9180122407de35c327c9abaca540e4f02cbc2328cfb25bff4556b1079e4538dfb9f6036ca9ea5d75606366f43db6ba1a8dcdc90da1a30723fe6ccae93f825b0e4eb4e30012801322094fec6dd277668cf5db24b408b79f91aa987fb20e4778fdd2bc94375f7f361f1
+        // 0a9101080d109b3e18f48e852f2001820181010a6268747470733a2f2f6672616d652d76616c696461746f722e766572
+        // 63656c2e6170702f66616b652d657865637574652f33313333372f596c4e2d5372743066396b694e723248617a4e346e
+        // 353435383361666e6d4f34635a577a737a32496b584d3d10011a19089b3e121400000000000000000000000000000000
+        // 0000000112143f967a00d36d29b7bc589d454c55a3c2af8dddc9180122407de35c327c9abaca540e4f02cbc2328cfb25
+        // bff4556b1079e4538dfb9f6036ca9ea5d75606366f43db6ba1a8dcdc90da1a30723fe6ccae93f825b0e4eb4e30012801
+        // 322094fec6dd277668cf5db24b408b79f91aa987fb20e4778fdd2bc94375f7f361f1
         address dai = makeAddr("dai");
         uint256 value = 0 ether;
         address recipient = makeAddr("recipient");
         uint256 amount = 123 ether;
-        bytes memory data = abi.encodeWithSignature("transfer(address,uint256)", recipient, amount);
         bytes4 methodId = bytes4(keccak256("transfer(address,uint256)"));
         bytes memory callData = abi.encodeWithSelector(methodId, recipient, amount);
 
@@ -149,8 +156,8 @@ contract FrameValidatorTest is RhinestoneModuleKit, Test {
         );
 
         FrameValidator.FrameUserOpSignature memory frameStruct = FrameValidator.FrameUserOpSignature({
-            signature_r: 0x7de35c327c9abaca540e4f02cbc2328cfb25bff4556b1079e4538dfb9f6036ca,
-            signature_s: 0x9ea5d75606366f43db6ba1a8dcdc90da1a30723fe6ccae93f825b0e4eb4e3001,
+            signatureR: 0x7de35c327c9abaca540e4f02cbc2328cfb25bff4556b1079e4538dfb9f6036ca,
+            signatureS: 0x9ea5d75606366f43db6ba1a8dcdc90da1a30723fe6ccae93f825b0e4eb4e3001,
             messageData: MessageData({
                 type_: MessageType.MESSAGE_TYPE_FRAME_ACTION,
                 fid: 7963,
@@ -183,7 +190,12 @@ contract FrameValidatorTest is RhinestoneModuleKit, Test {
 
     function testInvalidSignature() public {
         // FC message:
-        // 0a9101080d109b3e18cdef842f2001820181010a6268747470733a2f2f6672616d652d76616c696461746f722e76657263656c2e6170702f66616b652d657865637574652f33313333372f7567356c48456162336e5544776c3876574e4f7730302d73397665627555564b4b4b77416136694a7732633d10011a19089b3e1214000000000000000000000000000000000000000112148b556cddc4c97208aea4b49e0b54327b20fae469180122405649d36d30dec4d7338f412f40f179183b6d1890c98102c5a6bc713159c2c5471e24994667d59168a3b3b2aca7b7f5cadb41be5d75f4f356f59a30567075d40b2801322094fec6dd277668cf5db24b408b79f91aa987fb20e4778fdd2bc94375f7f361f1
+        // 0a9101080d109b3e18cdef842f2001820181010a6268747470733a2f2f6672616d652d76616c696461746f722e766572
+        // 63656c2e6170702f66616b652d657865637574652f33313333372f7567356c48456162336e5544776c3876574e4f7730
+        // 302d73397665627555564b4b4b77416136694a7732633d10011a19089b3e121400000000000000000000000000000000
+        // 0000000112148b556cddc4c97208aea4b49e0b54327b20fae469180122405649d36d30dec4d7338f412f40f179183b6d
+        // 1890c98102c5a6bc713159c2c5471e24994667d59168a3b3b2aca7b7f5cadb41be5d75f4f356f59a30567075d40b2801
+        // 322094fec6dd277668cf5db24b408b79f91aa987fb20e4778fdd2bc94375f7f361f1
         // Same as testEthTransfer but with an off-by-one error in the signature
         address target = makeAddr("target");
         uint256 value = 1 ether;
@@ -201,8 +213,8 @@ contract FrameValidatorTest is RhinestoneModuleKit, Test {
             Base64.encode(abi.encodePacked(keccak256(userOpData.userOp.callData)), true)
         );
         FrameValidator.FrameUserOpSignature memory frameStruct = FrameValidator.FrameUserOpSignature({
-            signature_r: 0x5649d36d30dec4d7338f412f40f179183b6d1890c98102c5a6bc713159c2c546,
-            signature_s: 0x1e24994667d59168a3b3b2aca7b7f5cadb41be5d75f4f356f59a30567075d40b,
+            signatureR: 0x5649d36d30dec4d7338f412f40f179183b6d1890c98102c5a6bc713159c2c546,
+            signatureS: 0x1e24994667d59168a3b3b2aca7b7f5cadb41be5d75f4f356f59a30567075d40b,
             messageData: MessageData({
                 type_: MessageType.MESSAGE_TYPE_FRAME_ACTION,
                 fid: 7963,
@@ -227,7 +239,12 @@ contract FrameValidatorTest is RhinestoneModuleKit, Test {
 
     function testUrlInvalidBaseUrl() public {
         // FC message:
-        // 0a9b01080d109b3e18e5ef842f200182018b010a6c68747470733a2f2f6d616c6963696f75732d6672616d652d76616c696461746f722e76657263656c2e6170702f66616b652d657865637574652f33313333372f7567356c48456162336e5544776c3876574e4f7730302d73397665627555564b4b4b77416136694a7732633d10011a19089b3e121400000000000000000000000000000000000000011214a1a33483bac9f880dbbf7ac7d28d3abf8d6a6cc6180122403cb534a97511e05bea338a638f1cbb4010c5dd54729ceea10ad73038eefc036795b1bcaa9b2e356cb468e32855bfbcf5758a02cbca72e4acf768ccfc97ddef0c2801322094fec6dd277668cf5db24b408b79f91aa987fb20e4778fdd2bc94375f7f361f1
+        // 0a9b01080d109b3e18e5ef842f200182018b010a6c68747470733a2f2f6d616c6963696f75732d6672616d652d76616c
+        // 696461746f722e76657263656c2e6170702f66616b652d657865637574652f33313333372f7567356c48456162336e55
+        // 44776c3876574e4f7730302d73397665627555564b4b4b77416136694a7732633d10011a19089b3e1214000000000000
+        // 00000000000000000000000000011214a1a33483bac9f880dbbf7ac7d28d3abf8d6a6cc6180122403cb534a97511e05b
+        // ea338a638f1cbb4010c5dd54729ceea10ad73038eefc036795b1bcaa9b2e356cb468e32855bfbcf5758a02cbca72e4ac
+        // f768ccfc97ddef0c2801322094fec6dd277668cf5db24b408b79f91aa987fb20e4778fdd2bc94375f7f361f1
         // Same as testEthTransfer but with a malicious base URL
         address target = makeAddr("target");
         uint256 value = 1 ether;
@@ -245,8 +262,8 @@ contract FrameValidatorTest is RhinestoneModuleKit, Test {
             Base64.encode(abi.encodePacked(keccak256(userOpData.userOp.callData)), true)
         );
         FrameValidator.FrameUserOpSignature memory frameStruct = FrameValidator.FrameUserOpSignature({
-            signature_r: 0x3cb534a97511e05bea338a638f1cbb4010c5dd54729ceea10ad73038eefc0367,
-            signature_s: 0x95b1bcaa9b2e356cb468e32855bfbcf5758a02cbca72e4acf768ccfc97ddef0c,
+            signatureR: 0x3cb534a97511e05bea338a638f1cbb4010c5dd54729ceea10ad73038eefc0367,
+            signatureS: 0x95b1bcaa9b2e356cb468e32855bfbcf5758a02cbca72e4acf768ccfc97ddef0c,
             messageData: MessageData({
                 type_: MessageType.MESSAGE_TYPE_FRAME_ACTION,
                 fid: 7963,
@@ -271,7 +288,12 @@ contract FrameValidatorTest is RhinestoneModuleKit, Test {
 
     function testUrlInvalidChain() public {
         // FC message:
-        // 0a9401080d109b3e18dcef842f2001820184010a6568747470733a2f2f6672616d652d76616c696461746f722e76657263656c2e6170702f66616b652d657865637574652f31313135353131312f7567356c48456162336e5544776c3876574e4f7730302d73397665627555564b4b4b77416136694a7732633d10011a19089b3e1214000000000000000000000000000000000000000112142b758d02694b4133c53c7fe5c50da0c62a957f6c1801224026903ac950aaad4adbcf29cbcaf42a40f8dfb644e675cae01752642e562eecf79eea3bb683c043d6e6e90a7ce53045b6e36bfb272c13382d511ab47f72978a042801322094fec6dd277668cf5db24b408b79f91aa987fb20e4778fdd2bc94375f7f361f1
+        // 0a9401080d109b3e18dcef842f2001820184010a6568747470733a2f2f6672616d652d76616c696461746f722e766572
+        // 63656c2e6170702f66616b652d657865637574652f31313135353131312f7567356c48456162336e5544776c3876574e
+        // 4f7730302d73397665627555564b4b4b77416136694a7732633d10011a19089b3e121400000000000000000000000000
+        // 0000000000000112142b758d02694b4133c53c7fe5c50da0c62a957f6c1801224026903ac950aaad4adbcf29cbcaf42a
+        // 40f8dfb644e675cae01752642e562eecf79eea3bb683c043d6e6e90a7ce53045b6e36bfb272c13382d511ab47f72978a
+        // 042801322094fec6dd277668cf5db24b408b79f91aa987fb20e4778fdd2bc94375f7f361f1
         // Same as testEthTransfer but with an invalid chain ID
         address target = makeAddr("target");
         uint256 value = 1 ether;
@@ -289,8 +311,8 @@ contract FrameValidatorTest is RhinestoneModuleKit, Test {
             Base64.encode(abi.encodePacked(keccak256(userOpData.userOp.callData)), true)
         );
         FrameValidator.FrameUserOpSignature memory frameStruct = FrameValidator.FrameUserOpSignature({
-            signature_r: 0x26903ac950aaad4adbcf29cbcaf42a40f8dfb644e675cae01752642e562eecf7,
-            signature_s: 0x9eea3bb683c043d6e6e90a7ce53045b6e36bfb272c13382d511ab47f72978a04,
+            signatureR: 0x26903ac950aaad4adbcf29cbcaf42a40f8dfb644e675cae01752642e562eecf7,
+            signatureS: 0x9eea3bb683c043d6e6e90a7ce53045b6e36bfb272c13382d511ab47f72978a04,
             messageData: MessageData({
                 type_: MessageType.MESSAGE_TYPE_FRAME_ACTION,
                 fid: 7963,
@@ -334,8 +356,8 @@ contract FrameValidatorTest is RhinestoneModuleKit, Test {
             Base64.encode(abi.encodePacked(keccak256(callDataCopy)), true)
         );
         FrameValidator.FrameUserOpSignature memory frameStruct = FrameValidator.FrameUserOpSignature({
-            signature_r: 0xea6a3926da8badb1783967de6189e3158309e47507a68261c59e04d3777b09e8,
-            signature_s: 0xa41840f3c003f8003bf3e682698262035e28e48d37cfeb24cac71a05438aba0a,
+            signatureR: 0xea6a3926da8badb1783967de6189e3158309e47507a68261c59e04d3777b09e8,
+            signatureS: 0xa41840f3c003f8003bf3e682698262035e28e48d37cfeb24cac71a05438aba0a,
             messageData: MessageData({
                 type_: MessageType.MESSAGE_TYPE_FRAME_ACTION,
                 fid: 7963,
@@ -375,8 +397,8 @@ contract FrameValidatorTest is RhinestoneModuleKit, Test {
             Base64.encode(abi.encodePacked(keccak256(userOpData.userOp.callData)), true)
         );
         FrameValidator.FrameUserOpSignature memory frameStruct = FrameValidator.FrameUserOpSignature({
-            signature_r: 0x5649d36d30dec4d7338f412f40f179183b6d1890c98102c5a6bc713159c2c547,
-            signature_s: 0x1e24994667d59168a3b3b2aca7b7f5cadb41be5d75f4f356f59a30567075d40b,
+            signatureR: 0x5649d36d30dec4d7338f412f40f179183b6d1890c98102c5a6bc713159c2c547,
+            signatureS: 0x1e24994667d59168a3b3b2aca7b7f5cadb41be5d75f4f356f59a30567075d40b,
             messageData: MessageData({
                 type_: MessageType.MESSAGE_TYPE_FRAME_ACTION,
                 fid: 7963,

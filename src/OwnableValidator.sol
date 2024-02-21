@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.19;
+pragma solidity ^0.8.23;
 
 import { ERC7579ValidatorBase } from "modulekit/Modules.sol";
 import { PackedUserOperation } from "modulekit/external/ERC4337.sol";
@@ -72,7 +72,6 @@ contract OwnableValidator is ERC7579ValidatorBase {
 
     /**
      * Validates an ERC-1271 signature
-     * @param sender The sender of the ERC-1271 call to the account
      * @param hash The hash of the message
      * @param signature The signature of the message
      * @return sigValidationResult the result of the signature validation, which can be:
@@ -80,7 +79,7 @@ contract OwnableValidator is ERC7579ValidatorBase {
      *  - EIP1271_FAILED if the signature is invalid
      */
     function isValidSignatureWithSender(
-        address sender,
+        address,
         bytes32 hash,
         bytes calldata signature
     )
@@ -91,8 +90,6 @@ contract OwnableValidator is ERC7579ValidatorBase {
         returns (bytes4 sigValidationResult)
     {
         address owner = owners[msg.sender];
-        address recover = ECDSA.recover(hash, signature);
-        bool valid = SignatureCheckerLib.isValidSignatureNow(owner, hash, signature);
         return SignatureCheckerLib.isValidSignatureNow(owner, hash, signature)
             ? EIP1271_SUCCESS
             : EIP1271_FAILED;
