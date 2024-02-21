@@ -64,4 +64,15 @@ The URL schema is `BASE_URL` + `CHAIN/CALLDATA_HASH`, where `BASE_URL` is the mo
 
 The frame message data gets passed via UserOp signature.
 
+The replay attack is implemented via storing the last frame timestamp.
+
 The best way to understand how to craft the FC frame message and the UserOp payload is to go through the tests.
+
+## Gotchas
+
+There are some limitations and possible attack vectors with the current degisn.
+
+- Anyone can prevent anyone's public key from being used during installation by installing a module to their account using that key. This can be easily prevented by dropping a requirement of not allowing the same public key being used twice
+- The frame hoster (owner of the BASE_URL) can censor and omit UserOp signed via the frame
+- The frame hoster can spoof the transaction, showing one calldata in the image but providing another one to sign. This can technically be circumvented by users manually comparing the shown calldata with the URL. In practice, some level of trust between the frame user and the frame hoster is assumed.
+- The frame hoster has know the preimage calldata of the hash to render the tx properly for users. The exchange between the frame hoster and the frame poster could be done offchain or even onchain.
