@@ -20,6 +20,11 @@ jobs:
       - name: "Install Foundry"
         uses: "foundry-rs/foundry-toolchain@v1"
 
+      - name: "Install pnpm"
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
       - name: "Install the Node.js dependencies"
         run: "pnpm install"
 
@@ -39,6 +44,11 @@ jobs:
 
       - name: "Install Foundry"
         uses: "foundry-rs/foundry-toolchain@v1"
+
+      - name: "Install pnpm"
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
 
       - name: "Install the Node.js dependencies"
         run: "pnpm install"
@@ -60,6 +70,11 @@ jobs:
 
       - name: "Install Foundry"
         uses: "foundry-rs/foundry-toolchain@v1"
+
+      - name: "Install pnpm"
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
 
       - name: "Install the Node.js dependencies"
         run: "pnpm install"
