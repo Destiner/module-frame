@@ -64,7 +64,7 @@ The URL schema is `BASE_URL` + `CHAIN/CALLDATA_HASH`, where `BASE_URL` is the mo
 
 The frame message data gets passed via UserOp signature.
 
-The replay attack is implemented via storing the last frame timestamp.
+The replay attack protection is implemented via storing the last frame timestamp for each account.
 
 The best way to understand how to craft the FC frame message and the UserOp payload is to go through the tests.
 
