@@ -2,7 +2,7 @@
 pragma solidity ^0.8.19;
 
 import { EncodedModuleTypes } from "erc7579/lib/ModuleTypeLib.sol";
-import { MessageData } from "frame-verifier/Encoder.sol";
+import { MessageData, FarcasterNetwork } from "frame-verifier/Encoder.sol";
 import { FrameVerifier } from "frame-verifier/FrameVerifier.sol";
 import { ERC7579ValidatorBase } from "modulekit/modules/ERC7579ValidatorBase.sol";
 import { PackedUserOperation } from "account-abstraction/interfaces/PackedUserOperation.sol";
@@ -21,6 +21,8 @@ contract FrameValidator is ERC7579ValidatorBase {
     // The trusted URL to validate the transaction
     // Everything coming from this URL is considered valid
     string public baseUrl;
+    // The valid farcaster network
+    FarcasterNetwork public farcasterNetwork;
 
     struct FrameUserOpSignature {
         bytes32 signature_r;
@@ -36,8 +38,9 @@ contract FrameValidator is ERC7579ValidatorBase {
     mapping(address account => AccountData data) public accounts;
     mapping(bytes32 publicKey => address account) public keys;
 
-    constructor(string memory _baseUrl) {
+    constructor(string memory _baseUrl, FarcasterNetwork _farcasterNetwork) {
         baseUrl = _baseUrl;
+        farcasterNetwork = _farcasterNetwork;
     }
 
     /*//////////////////////////////////////////////////////////////////////////
@@ -132,6 +135,10 @@ contract FrameValidator is ERC7579ValidatorBase {
                 frameStruct.messageData
             )
         ) {
+            return VALIDATION_FAILED;
+        }
+        // Make sure
+        if (frameStruct.messageData.network != farcasterNetwork) {
             return VALIDATION_FAILED;
         }
         // Verify URL-decoded calldata

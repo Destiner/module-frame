@@ -42,13 +42,15 @@ contract FrameValidatorTest is RhinestoneModuleKit, Test {
     bytes32 internal publicKey = 0x94fec6dd277668cf5db24b408b79f91aa987fb20e4778fdd2bc94375f7f361f1;
 
     string BASE_URL = "https://frame-validator.vercel.app/fake-execute/";
+    FarcasterNetwork farcasterNetwork = FarcasterNetwork.FARCASTER_NETWORK_MAINNET;
 
     function setUp() public {
         init();
 
-        validator = new FrameValidator(BASE_URL);
+        validator = new FrameValidator(BASE_URL, farcasterNetwork);
         vm.label(address(validator), "FrameValidator");
         assertEq(validator.baseUrl(), BASE_URL);
+        assertEq(uint256(validator.farcasterNetwork()), uint256(farcasterNetwork));
 
         aliceAccount = makeAccountInstance("alice");
         vm.deal(address(aliceAccount.account), 10 ether);
@@ -180,6 +182,10 @@ contract FrameValidatorTest is RhinestoneModuleKit, Test {
 
     function testInvalidOwner() public {
         // TODO test by signing the message with a different key
+    }
+
+    function testInvalidFarcasterNetwork() public {
+        // TODO test by signing the message with a different network
     }
 
     function testInvalidSignature() public {
