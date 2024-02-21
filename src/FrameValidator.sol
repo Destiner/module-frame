@@ -16,7 +16,6 @@ import "forge-std/console2.sol";
 
 contract FrameValidator is ERC7579ValidatorBase {
     error DuplicateAccount();
-    error DuplicatePublicKey();
 
     // The trusted URL to validate the transaction
     // Everything coming from this URL is considered valid
@@ -36,7 +35,6 @@ contract FrameValidator is ERC7579ValidatorBase {
     }
 
     mapping(address account => AccountData data) public accounts;
-    mapping(bytes32 publicKey => address account) public keys;
 
     constructor(string memory _baseUrl, FarcasterNetwork _farcasterNetwork) {
         baseUrl = _baseUrl;
@@ -56,18 +54,13 @@ contract FrameValidator is ERC7579ValidatorBase {
         if (accounts[msg.sender].publicKey != bytes32(0)) {
             revert DuplicateAccount();
         }
-        if (keys[publicKey] != address(0)) {
-            revert DuplicatePublicKey();
-        }
         accounts[msg.sender] = AccountData(publicKey, 0);
-        keys[publicKey] = msg.sender;
     }
 
     /* De-initialize the module with the given data
      * @param data The data to de-initialize the module with
      */
     function onUninstall(bytes calldata) external override {
-        delete keys[accounts[msg.sender].publicKey];
         delete accounts[msg.sender];
     }
 
@@ -77,8 +70,7 @@ contract FrameValidator is ERC7579ValidatorBase {
      * @return true if the module is initialized, false otherwise
      */
     function isInitialized(address smartAccount) external view returns (bool) {
-        return accounts[smartAccount].publicKey != bytes32(0)
-            && keys[accounts[smartAccount].publicKey] == smartAccount;
+        return accounts[smartAccount].publicKey != bytes32(0);
     }
 
     /*//////////////////////////////////////////////////////////////////////////
