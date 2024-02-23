@@ -27,12 +27,8 @@ contract FrameValidator is ERC7579ValidatorBase {
         MessageData messageData;
     }
 
-    struct AccountData {
-        bytes32 publicKey;
-        uint256 lastFrameTimestamp;
-    }
-
-    mapping(address account => AccountData data) public accounts;
+    mapping(address account => bytes32 publicKey) public accounts;
+    mapping(bytes32 publicKey => uint256 lastFrameTimestamp) public nonces;
 
     constructor(string memory _baseUrl, FarcasterNetwork _farcasterNetwork) {
         baseUrl = _baseUrl;
@@ -49,10 +45,10 @@ contract FrameValidator is ERC7579ValidatorBase {
     function onInstall(bytes calldata data) public override {
         if (data.length == 0) return;
         bytes32 publicKey = abi.decode(data, (bytes32));
-        if (accounts[msg.sender].publicKey != bytes32(0)) {
+        if (accounts[msg.sender] != bytes32(0)) {
             revert DuplicateAccount();
         }
-        accounts[msg.sender] = AccountData(publicKey, 0);
+        accounts[msg.sender] = publicKey;
     }
 
     /* De-initialize the module with the given data
@@ -68,7 +64,7 @@ contract FrameValidator is ERC7579ValidatorBase {
      * @return true if the module is initialized, false otherwise
      */
     function isInitialized(address smartAccount) external view returns (bool) {
-        return accounts[smartAccount].publicKey != bytes32(0);
+        return accounts[smartAccount] != bytes32(0);
     }
 
     /*//////////////////////////////////////////////////////////////////////////
@@ -118,7 +114,7 @@ contract FrameValidator is ERC7579ValidatorBase {
         // Verify signature
         if (
             !FrameVerifier.verifyMessageData(
-                accounts[sender].publicKey,
+                accounts[sender],
                 frameStruct.signatureR,
                 frameStruct.signatureS,
                 frameStruct.messageData
@@ -141,10 +137,10 @@ contract FrameValidator is ERC7579ValidatorBase {
             return VALIDATION_FAILED;
         }
         // Verify timestamp to protect against replay attacks
-        if (frameStruct.messageData.timestamp <= accounts[sender].lastFrameTimestamp) {
+        if (frameStruct.messageData.timestamp <= nonces[accounts[sender]]) {
             return VALIDATION_FAILED;
         }
-        accounts[sender].lastFrameTimestamp = frameStruct.messageData.timestamp;
+        nonces[accounts[sender]] = frameStruct.messageData.timestamp;
         return ValidationData.wrap(0);
     }
 

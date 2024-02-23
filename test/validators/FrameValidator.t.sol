@@ -62,8 +62,8 @@ contract FrameValidatorTest is RhinestoneModuleKit, Test {
     }
 
     function testInstall() public {
-        (bytes32 accountPublicKey, uint256 lastFrameTimestamp) =
-            validator.accounts(address(aliceAccount.account));
+        bytes32 accountPublicKey = validator.accounts(address(aliceAccount.account));
+        uint256 lastFrameTimestamp = validator.nonces(accountPublicKey);
         bool isInitialized = validator.isInitialized(address(aliceAccount.account));
 
         assertEq(publicKey, accountPublicKey);
@@ -419,6 +419,7 @@ contract FrameValidatorTest is RhinestoneModuleKit, Test {
             ERC7579ValidatorBase.ValidationData.unwrap(validationResult),
             ERC7579ValidatorBase.ValidationData.unwrap(VALIDATION_FAILED)
         );
+        assertEq(validator.nonces(publicKey), 98_645_965);
 
         // Replay the same UserOp
         validationResult = validator.validateUserOp(userOpData.userOp, userOpData.userOpHash);
