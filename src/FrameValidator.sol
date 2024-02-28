@@ -1,11 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
-import { EncodedModuleTypes } from "erc7579/lib/ModuleTypeLib.sol";
 import { MessageData, FarcasterNetwork } from "frame-verifier/Encoder.sol";
 import { FrameVerifier } from "frame-verifier/FrameVerifier.sol";
-import { ERC7579ValidatorBase } from "modulekit/modules/ERC7579ValidatorBase.sol";
-import { PackedUserOperation } from "account-abstraction/interfaces/PackedUserOperation.sol";
+import { ERC7579ValidatorBase } from "modulekit/Modules.sol";
+import { PackedUserOperation } from "modulekit/external/ERC4337.sol";
 import { UserOperation } from "account-abstraction-v0.6/interfaces/UserOperation.sol";
 import { Strings } from "@openzeppelin/contracts/utils/Strings.sol";
 import { Base64 } from "solady/src/utils/Base64.sol";
@@ -193,10 +192,4 @@ contract FrameValidator is ERC7579ValidatorBase {
     function isModuleType(uint256 typeID) external pure override returns (bool) {
         return typeID == TYPE_VALIDATOR;
     }
-
-    /**
-     * Get the module types
-     * @return moduleTypes The bit-encoded module types
-     */
-    function getModuleTypes() external view returns (EncodedModuleTypes) { }
 }
